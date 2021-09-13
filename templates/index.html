@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>What you feeling?</title>
+    <!-- <link rel="stylesheet" href="./MobileNet SSD Detector_files/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="./MobileNet SSD Detector_files/index.css"> -->
+
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1028.0" data-gr-ext-installed="">
+
+    <div class="container">
+        <div class="starter-template">
+            <h2>We tell you what you feel</h2>
+            <p>Upload an image and get to know your gender and emotion</p>
+            <p> Max Image Size: 2 MB </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" onchange="loadFile(event)">
+            <input type="submit" value="Upload" class="btn btn-primary">
+        </form>
+        <img id="output" alt="" width="40%" height="40%">
+    </div>
+
+    {% if data %}
+    <div class="container">
+        <img src="{{ data.processed_img }}" width="480px" height="360px">
+        <img src="{{ data.uploaded_img }}" width="480px" height="360px">
+    </div>
+    {% endif %}
+
+    <!-- <script src="./MobileNet SSD Detector_files/index.js.download"></script> -->
+</body>
+
+</html>
