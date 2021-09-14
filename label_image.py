@@ -51,10 +51,10 @@ def load_labels(label_file):
     label.append(l.rstrip())
   return label
 
-def main(img):
+def main(img, model_file, label_file):
   file_name = img
-  model_file = "retrained_graph.pb"
-  label_file = "retrained_labels.txt"
+  model_file = model_file
+  label_file = label_file
   input_height = 224
   input_width = 224
   input_mean = 128

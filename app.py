@@ -29,7 +29,7 @@ app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
+   return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 
@@ -48,7 +48,7 @@ def index():
          filename = secure_filename(file.filename)
          file.save(os.path.join(UPLOAD_FOLDER, filename))
    
-      process_file(os.path.join(UPLOAD_FOLDER,filename),filename)
+      process_file(os.path.join(UPLOAD_FOLDER,filename), filename)
       
       data={ "processed_img":'static/downloads/'+filename, "uploaded_img":'static/uploads/'+filename}
       return render_template("index.html",data=data)
@@ -59,40 +59,45 @@ def index():
 
 """Define the “process_file” function that calls the “detect_object” function which identifies the object in the image and saves it to the download folder."""
 def process_file(path, filename):
-    detect_object(path,filename)
+   detect_object(path,filename)
 
 def detect_object(path,filename):
-    size = 2
+   size = 2
 
-    #loading haarcascade face detector
-    classifier = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+   #loading haarcascade face detector
+   classifier = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
     
-    #Load image
-    image = cv2.imread(path)
+   #Load image
+   image = cv2.imread(path)
 
-    # Resize the image to speed up detection
-    mini = cv2.resize(image, (int(image.shape[1]/size), int(image.shape[0]/size)))
+   # Resize the image to speed up detection
+   mini = cv2.resize(image, (int(image.shape[1]/size), int(image.shape[0]/size)))
 
-    # detect MultiScale / faces 
-    faces = classifier.detectMultiScale(mini)
+   # detect MultiScale / faces 
+   faces = classifier.detectMultiScale(mini)
 
-    # Draw rectangles around each face
-    for f in faces:
-        (x, y, w, h) = [v * size for v in f] #Scale the shapesize backup
-        cv2.rectangle(image, (x,y), (x+w,y+h), (0,255,0), 4)
+   # Draw rectangles around each face
+   for f in faces:
+      (x, y, w, h) = [v * size for v in f] #Scale the shapesize backup
+      cv2.rectangle(image, (x,y), (x+w,y+h), (0,255,0), 4)
             
-        #Save just the rectangle faces in SubRecFaces
-        sub_face = image[y:y+h, x:x+w]
+      #Save just the rectangle faces in SubRecFaces
+      sub_face = image[y:y+h, x:x+w]
 
-        FaceFileName = "test.jpg" #Saving the current image from the webcam for testing.
-        cv2.imwrite(FaceFileName, sub_face)
+      FaceFileName = "test.jpg" #Saving the current image from the webcam for testing.
+      cv2.imwrite(FaceFileName, sub_face)
             
-        text = label_image.main(FaceFileName)# Getting the Result from the label_image file, i.e., Classification Result.
-        text = text.title()# Title Case looks Stunning.
-        font = cv2.FONT_HERSHEY_TRIPLEX
-        cv2.putText(image, text,(x+w,y), font, 0.5, (0,0,255), 1)
+      emotion = label_image.main(FaceFileName, "emotion_retrained_graph.pb", "emotion_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
+      emotion = emotion.title()# Title Case looks Stunning.
+      font = cv2.FONT_HERSHEY_DUPLEX
+      cv2.putText(image, emotion,(x+w,y), font, 0.5, (0,0,255), 1)
 
-    cv2.imwrite(f"{DOWNLOAD_FOLDER}{filename}",image) 
+      gender = label_image.main(FaceFileName, "gender_retrained_graph.pb", "gender_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
+      gender = gender.title()# Title Case looks Stunning.
+      font = cv2.FONT_HERSHEY_DUPLEX
+      cv2.putText(image, gender,(x,y), font, 0.5, (255,0,0), 1)
+
+   cv2.imwrite(f"{DOWNLOAD_FOLDER}{filename}",image) 
 
 
 if __name__ == '__main__':
