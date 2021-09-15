@@ -98,7 +98,3 @@ def detect_object(path,filename):
       cv2.putText(image, gender,(x,y), font, 0.5, (255,0,0), 1)
 
    cv2.imwrite(f"{DOWNLOAD_FOLDER}{filename}",image) 
-
-
-if __name__ == '__main__':
-   app.run()
