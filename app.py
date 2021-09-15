@@ -19,7 +19,7 @@ ALLOWED_EXTENSIONS = {'jpg', 'png', '.jpeg'}
 
 
 # APP CONFIGURATIONS
-app.config['SECRET_KEY'] = 'YourSecretKey'
+app.config['SECRET_KEY'] = 'ETow3uriVOy-W9jR6re2aQ'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 # limit upload size to 2mb
@@ -65,7 +65,7 @@ def detect_object(path,filename):
    size = 2
 
    #loading haarcascade face detector
-   classifier = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+   classifier = cv2.CascadeClassifier('models/haarcascade_frontalface_alt.xml')
     
    #Load image
    image = cv2.imread(path)
@@ -87,12 +87,12 @@ def detect_object(path,filename):
       FaceFileName = "test.jpg" #Saving the current image from the webcam for testing.
       cv2.imwrite(FaceFileName, sub_face)
             
-      emotion = label_image.main(FaceFileName, "emotion_retrained_graph.pb", "emotion_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
+      emotion = label_image.main(FaceFileName, "models/emotion_retrained_graph.pb", "models/emotion_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
       emotion = emotion.title()# Title Case looks Stunning.
       font = cv2.FONT_HERSHEY_DUPLEX
       cv2.putText(image, emotion,(x+w,y), font, 0.5, (0,0,255), 1)
 
-      gender = label_image.main(FaceFileName, "gender_retrained_graph.pb", "gender_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
+      gender = label_image.main(FaceFileName, "models/gender_retrained_graph.pb", "models/gender_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
       gender = gender.title()# Title Case looks Stunning.
       font = cv2.FONT_HERSHEY_DUPLEX
       cv2.putText(image, gender,(x,y), font, 0.5, (255,0,0), 1)
