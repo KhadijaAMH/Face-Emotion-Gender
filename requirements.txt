@@ -15,4 +15,4 @@ tensorflow==2.6.0
 tensorflow-estimator==2.6.0
 Werkzeug==2.0.1
 wrapt==1.12.1
-gunicorn
+gunicorn==20.1.0
