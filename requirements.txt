@@ -12,12 +12,7 @@ MarkupSafe==2.0.1
 numpy==1.19.5
 oauthlib==3.1.1
 opencv-python==4.5.3.56
-tensorboard==2.6.0
-tensorboard-data-server==0.6.1
-tensorboard-plugin-wit==1.8.0
 tensorflow==2.6.0
 tensorflow-estimator==2.6.0
-termcolor==1.1.0
-urllib3==1.26.6
 Werkzeug==2.0.1
 wrapt==1.12.1
