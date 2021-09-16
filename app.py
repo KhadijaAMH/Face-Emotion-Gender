@@ -14,7 +14,7 @@ import label_image
 app = Flask(__name__, static_url_path = "/static")
 UPLOAD_FOLDER = 'static/uploads/'
 DOWNLOAD_FOLDER = 'static/downloads/'
-ALLOWED_EXTENSIONS = {'jpg', 'png', '.jpeg'}
+ALLOWED_EXTENSIONS = {'jpg', 'png', '.jpeg', '.jfif'}
 
 
 
@@ -27,11 +27,9 @@ app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 
 
-
+#to check for allowed extension
 def allowed_file(filename):
    return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,20 +45,23 @@ def index():
       if file and allowed_file(file.filename):
          filename = secure_filename(file.filename)
          file.save(os.path.join(UPLOAD_FOLDER, filename))
-   
+      elif not allowed_file(file.filename):
+         return render_template("index.html", error="Please upload an image file")
+      #process the image file uploaded
       process_file(os.path.join(UPLOAD_FOLDER,filename), filename)
       
+      #Getting the processed and original image to pass to the template
       data={ "processed_img":'static/downloads/'+filename, "uploaded_img":'static/uploads/'+filename}
       return render_template("index.html",data=data)
    return render_template('index.html')
 
 
 
-
-"""Define the “process_file” function that calls the “detect_object” function which identifies the object in the image and saves it to the download folder."""
 def process_file(path, filename):
    detect_object(path,filename)
 
+
+# detect_object identifies the object in the image and saves it to the download folder
 def detect_object(path,filename):
    size = 2
 
@@ -86,15 +87,21 @@ def detect_object(path,filename):
 
       FaceFileName = "test.jpg" #Saving the current image from the webcam for testing.
       cv2.imwrite(FaceFileName, sub_face)
-            
+
+      #emotion recognition      
       emotion = label_image.main(FaceFileName, "models/emotion_retrained_graph.pb", "models/emotion_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
-      emotion = emotion.title()# Title Case looks Stunning.
+      emotion = emotion.title()
       font = cv2.FONT_HERSHEY_DUPLEX
       cv2.putText(image, emotion,(x+w,y), font, 0.5, (0,0,255), 1)
 
+      #gender recognition
       gender = label_image.main(FaceFileName, "models/gender_retrained_graph.pb", "models/gender_retrained_labels.txt")# Getting the Result from the label_image file, i.e., Classification Result.
-      gender = gender.title()# Title Case looks Stunning.
+      gender = gender.title()
       font = cv2.FONT_HERSHEY_DUPLEX
       cv2.putText(image, gender,(x,y), font, 0.5, (255,0,0), 1)
 
    cv2.imwrite(f"{DOWNLOAD_FOLDER}{filename}",image) 
+
+
+if __name__ == '__main__':
+   app.run()

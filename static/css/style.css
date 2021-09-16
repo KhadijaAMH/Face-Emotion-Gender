@@ -1,0 +1,10 @@
+body {
+    padding: 2em;
+    background: #9dc4da;
+}
+
+#images {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
