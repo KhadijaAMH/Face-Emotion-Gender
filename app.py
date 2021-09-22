@@ -102,6 +102,6 @@ def detect_object(path,filename):
 
    cv2.imwrite(f"{DOWNLOAD_FOLDER}{filename}",image) 
 
-
+#For deploying in cloud, set host and port as follows
 if __name__ == '__main__':
-   app.run()
+   app.run(host='0.0.0.0', port=8080)
